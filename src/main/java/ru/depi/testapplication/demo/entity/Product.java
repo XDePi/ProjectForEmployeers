@@ -1,6 +1,9 @@
 package ru.depi.testapplication.demo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 /**
@@ -16,10 +19,12 @@ public class Product {
     @Column
     private int id;
     @Column
+    @NotBlank(message = "Name cannot be blank")
     private String name;
     @Column
     private String info;
     @Column
+    @Min(value = 1, message = "Price must be not less than 1")
     private double price;
     @Column
     private Date date;
