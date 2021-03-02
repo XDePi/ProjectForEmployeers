@@ -31,7 +31,6 @@ public class ProductDAOImpl implements ProductDAO {
         long millis = System.currentTimeMillis();
         Date date = new Date(millis);
         product.setDate(date);
-        product.setDate_of_modification(date);
         Product product1 = entityManager.merge(product);
         product.setId(product1.getId());
     }
@@ -43,5 +42,12 @@ public class ProductDAOImpl implements ProductDAO {
         query.setParameter("productId", id);
         query.executeUpdate();
     }
-    
+
+    @Override
+    public Product getProduct(int id) {
+        Product product = entityManager.find(Product.class, id);
+        return product;
+    }
+
+
 }

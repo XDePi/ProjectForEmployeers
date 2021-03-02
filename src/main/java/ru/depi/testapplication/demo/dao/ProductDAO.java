@@ -8,5 +8,6 @@ public interface ProductDAO {
 
     List<Product> getAllProducts();
     void addProduct(Product product);
-    public void deleteProduct(int id);
+    void deleteProduct(int id);
+    Product getProduct(int id);
 }
