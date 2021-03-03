@@ -35,18 +35,12 @@ public class MyController {
 
     @PostMapping("/products")
     public Product addProduct(@RequestBody Product product) {
-        long millis = System.currentTimeMillis();
-        Date date = new Date(millis);
-        product.setDate_of_modification(date);
         productService.addProduct(product);
         return product;
     }
 
     @PutMapping("/products")
     public Product updateProduct(@RequestBody Product product) {
-        long millis = System.currentTimeMillis();
-        Date date = new Date(millis);
-        product.setDate_of_modification(date);
         productService.addProduct(product);
         return product;
     }
