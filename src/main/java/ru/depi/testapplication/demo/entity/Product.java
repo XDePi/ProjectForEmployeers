@@ -1,10 +1,13 @@
 package ru.depi.testapplication.demo.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * @author DePi
@@ -26,9 +29,11 @@ public class Product {
     @Column
     @Min(value = 1, message = "Price must be not less than 1")
     private double price;
-    @Column
+    @Column(updatable = false)
+    @CreationTimestamp
     private Date date;
     @Column
+    @UpdateTimestamp
     private Date date_of_modification;
 
     public Product() {

@@ -28,9 +28,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void addProduct(Product product) {
-        long millis = System.currentTimeMillis();
-        Date date = new Date(millis);
-        product.setDate(date);
+
         Product product1 = entityManager.merge(product);
         product.setId(product1.getId());
     }
