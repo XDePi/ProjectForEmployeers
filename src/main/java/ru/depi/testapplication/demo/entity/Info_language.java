@@ -15,13 +15,24 @@ public class Info_language {
     @Column
     private String language;
 
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "language",
+            fetch = FetchType.EAGER)
+    private List<Product> products;
+
     public Info_language() {
+    }
+
+    public Info_language(String language) {
+        this.language = language;
     }
 
     @Override
     public String toString() {
         return "Info_language{" +
                 "language='" + language + '\'' +
+                ", products=" + products +
                 '}';
     }
 
@@ -32,4 +43,12 @@ public class Info_language {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 }

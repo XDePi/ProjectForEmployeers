@@ -15,15 +15,17 @@ public class Currency {
     @Column
     private String value;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.MERGE},
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "currency",
             fetch = FetchType.EAGER)
     private List<Product> products;
 
     public Currency() {
+    }
+
+    public Currency(String value) {
+        this.value = value;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class Currency {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 }
