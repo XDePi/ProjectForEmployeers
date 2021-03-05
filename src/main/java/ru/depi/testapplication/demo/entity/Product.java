@@ -6,7 +6,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -21,17 +20,33 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private int id;
+
     @Column
     @NotBlank(message = "Name cannot be blank")
     private String name;
+
     @Column
     private String info;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "language")
+    private Info_language language;
+
     @Column
     @Min(value = 1, message = "Price must be not less than 1")
     private double price;
+
+    @ManyToOne(cascade = CascadeType.ALL/*{CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH}*/)
+    @JoinColumn(name = "currency")
+    private Currency currency;
+
     @Column(updatable = false)
     @CreationTimestamp
     private Date date;
+
     @Column
     @UpdateTimestamp
     private Date date_of_modification;
@@ -39,10 +54,13 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String info, double price, Date date, Date date_of_modification) {
+    public Product(String name, String info, Info_language language, double price,
+                   Currency currency, Date date, Date date_of_modification) {
         this.name = name;
         this.info = info;
+        this.language = language;
         this.price = price;
+        this.currency = currency;
         this.date = date;
         this.date_of_modification = date_of_modification;
     }
@@ -53,10 +71,20 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
+                ", language=" + language +
                 ", price=" + price +
-                ", date='" + date + '\'' +
-                ", date_of_modification='" + date_of_modification + '\'' +
+                ", currency=" + currency +
+                ", date=" + date +
+                ", date_of_modification=" + date_of_modification +
                 '}';
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public int getId() {
@@ -105,5 +133,13 @@ public class Product {
 
     public void setDate_of_modification(Date date_of_modification) {
         this.date_of_modification = date_of_modification;
+    }
+
+    public Info_language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Info_language language) {
+        this.language = language;
     }
 }
