@@ -2,8 +2,10 @@ package ru.depi.testapplication.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.depi.testapplication.demo.entity.Currency;
 import ru.depi.testapplication.demo.entity.Product;
 import ru.depi.testapplication.demo.exceptions.NoSuchProductException;
+import ru.depi.testapplication.demo.service.CurrencyService;
 import ru.depi.testapplication.demo.service.ProductService;
 
 import java.sql.Date;
@@ -18,6 +20,13 @@ public class MyController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    CurrencyService currencyService;
+
+    @GetMapping("/currencies")
+    public List<Currency> getAllCurrencies() {
+        return currencyService.getAllCurrencies();
+    }
 
     @GetMapping("/products")
     public List<Product> getAllProducts() {
