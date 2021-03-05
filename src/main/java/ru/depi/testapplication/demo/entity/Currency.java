@@ -1,6 +1,7 @@
 package ru.depi.testapplication.demo.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,14 +13,26 @@ import java.util.List;
 public class Currency {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private int id;
+
     @Column
     private String value;
 
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL,
-            mappedBy = "currency",
-            fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_currencies",
+            joinColumns = @JoinColumn(name = "currencyId"),
+            inverseJoinColumns = @JoinColumn(name = "productId")
+    )
     private List<Product> products;
+
+    public void addProductsToCurrency(Product product) {
+        if (products == null)
+            products = new ArrayList<>();
+        products.add(product);
+    }
 
     public Currency() {
     }
@@ -31,8 +44,25 @@ public class Currency {
     @Override
     public String toString() {
         return "Currency{" +
-                "value='" + value + '\'' +
+                "id=" + id +
+                ", value='" + value + '\'' +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public String getValue() {
@@ -43,11 +73,4 @@ public class Currency {
         this.value = value;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-//    public void setProducts(List<Product> products) {
-//        this.products = products;
-//    }
 }

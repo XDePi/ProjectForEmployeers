@@ -1,6 +1,7 @@
 package ru.depi.testapplication.demo.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,14 +13,26 @@ import java.util.List;
 public class Info_language {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private int id;
+
     @Column
     private String language;
 
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL,
-            mappedBy = "language",
-            fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_language",
+            joinColumns = @JoinColumn(name = "languageId"),
+            inverseJoinColumns = @JoinColumn(name = "productId")
+    )
     private List<Product> products;
+
+    public void addProductsToLanguage(Product product) {
+        if (products == null)
+            products = new ArrayList<>();
+        products.add(product);
+    }
 
     public Info_language() {
     }
@@ -31,9 +44,25 @@ public class Info_language {
     @Override
     public String toString() {
         return "Info_language{" +
-                "language='" + language + '\'' +
-                ", products=" + products +
+                "id=" + id +
+                ", language='" + language + '\'' +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public String getLanguage() {
@@ -44,11 +73,4 @@ public class Info_language {
         this.language = language;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-//    public void setProducts(List<Product> products) {
-//        this.products = products;
-//    }
 }

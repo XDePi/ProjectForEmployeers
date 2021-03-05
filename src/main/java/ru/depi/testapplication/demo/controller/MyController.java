@@ -1,14 +1,14 @@
 package ru.depi.testapplication.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.depi.testapplication.demo.entity.Currency;
+import ru.depi.testapplication.demo.dto.ProductDTO;
 import ru.depi.testapplication.demo.entity.Product;
-import ru.depi.testapplication.demo.exceptions.NoSuchProductException;
-import ru.depi.testapplication.demo.service.CurrencyService;
+import ru.depi.testapplication.demo.repository.ProductRepository;
 import ru.depi.testapplication.demo.service.ProductService;
 
-import java.sql.Date;
 import java.util.List;
 
 /**
@@ -19,47 +19,30 @@ import java.util.List;
 public class MyController {
 
     @Autowired
-    ProductService productService;
-    @Autowired
-    CurrencyService currencyService;
-
-    @GetMapping("/currencies")
-    public List<Currency> getAllCurrencies() {
-        return currencyService.getAllCurrencies();
-    }
+    private ProductService productService;
 
     @GetMapping("/products")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
-    }
-
-    @GetMapping("/products/{id}")
-    public Product getProduct(@PathVariable int id) {
-        Product product = productService.getProduct(id);
-
-        if (product == null)
-            throw new NoSuchProductException();
-        return product;
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @PostMapping("/products")
-    public Product addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return product;
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
+        ProductDTO prd = productService.addProduct(productDTO);
+        return new ResponseEntity<>(prd, HttpStatus.CREATED);
     }
 
-    @PutMapping("/products")
-    public Product updateProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return product;
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductDTO> updateStudent(@PathVariable(name = "id") int id,
+                                                    @RequestBody ProductDTO productDTO) {
+        ProductDTO prd = productService.updateProduct(id, productDTO);
+        return new ResponseEntity<>(prd, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable int id) {
-        Product product = productService.getProduct(id);
-        if (product == null)
-            throw new NoSuchProductException();
-
-        productService.deleteProduct(id);
+    public ResponseEntity<String> deleteProduct(@PathVariable(name = "id") int id) {
+        String message = productService.deleteProduct(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

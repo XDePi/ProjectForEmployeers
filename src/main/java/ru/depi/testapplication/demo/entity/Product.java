@@ -1,13 +1,14 @@
 package ru.depi.testapplication.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author DePi
@@ -29,23 +30,9 @@ public class Product {
     @Column
     private String info;
 
-    @ManyToOne(cascade = CascadeType.ALL/*{CascadeType.PERSIST,
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.REFRESH}*/)
-    @JoinColumn(name = "language")
-    private Info_language language;
-
     @Column
-    @Min(value = 1, message = "Price must be not less than 1")
+//    @Min(value = 1, message = "Price must be not less than 1")
     private double price;
-
-    @ManyToOne(cascade = CascadeType.ALL/*{CascadeType.PERSIST,
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.REFRESH}*/)
-    @JoinColumn(name = "currency")
-    private Currency currency;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -55,6 +42,54 @@ public class Product {
     @UpdateTimestamp
     private Date date_of_modification;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_currencies",
+            joinColumns = @JoinColumn(name = "productId"),
+            inverseJoinColumns = @JoinColumn(name = "currencyId")
+    )
+    private List<Currency> currencies;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_language",
+            joinColumns = @JoinColumn(name = "productId"),
+            inverseJoinColumns = @JoinColumn(name = "languageId")
+    )
+    private List<Info_language> languages;
+
+    public void addCurrencyToProduct(Currency currency) {
+        this.currencies.add(currency);
+        currency.getProducts().add(this);
+    }
+
+    public void addLanguageToProduct(Info_language language) {
+        this.languages.add(language);
+        language.getProducts().add(this);
+    }
+
+    public void removeCurrency(Currency currency) {
+        this.getCurrencies().remove(currency);
+        currency.getProducts().remove(this);
+    }
+
+    public void removeLanguage(Info_language language) {
+        this.getLanguages().remove(language);
+        language.getProducts().remove(this);
+    }
+
+    public void removeCurrencies() {
+        for (Currency currency : new ArrayList<>(currencies)) {
+            removeCurrency(currency);
+        }
+    }
+
+    public void removeLanguages() {
+        for (Info_language language : new ArrayList<>(languages)) {
+            removeLanguage(language);
+        }
+    }
+
     public Product() {
     }
 
@@ -62,9 +97,7 @@ public class Product {
                    Currency currency, Date date, Date date_of_modification) {
         this.name = name;
         this.info = info;
-        this.language = language;
         this.price = price;
-        this.currency = currency;
         this.date = date;
         this.date_of_modification = date_of_modification;
     }
@@ -75,20 +108,26 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
-                ", language=" + language +
                 ", price=" + price +
-                ", currency=" + currency +
                 ", date=" + date +
                 ", date_of_modification=" + date_of_modification +
                 '}';
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public List<Info_language> getLanguages() {
+        return languages;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setLanguages(List<Info_language> languages) {
+        this.languages = languages;
+    }
+
+    public List<Currency> getCurrencies() {
+        return currencies;
+    }
+
+    public void setCurrencies(List<Currency> currencies) {
+        this.currencies = currencies;
     }
 
     public int getId() {
@@ -139,11 +178,4 @@ public class Product {
         this.date_of_modification = date_of_modification;
     }
 
-    public Info_language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Info_language language) {
-        this.language = language;
-    }
 }
