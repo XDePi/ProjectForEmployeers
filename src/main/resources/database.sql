@@ -1,24 +1,15 @@
-create table if not exists products
-(
-    id int auto_increment
-    primary key,
-    name varchar(25) null,
-    info varchar(150) null,
-    price decimal(10,2) null,
-    date timestamp default CURRENT_TIMESTAMP null,
-    date_of_modification timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP
-    );
-
 create table currency
 (
-    value varchar(5) not null
-        primary key
+    id int auto_increment
+        primary key,
+    value varchar(5) null
 );
 
 create table info_language
 (
-    language varchar(5) not null
-        primary key
+    id int auto_increment
+        primary key,
+    language varchar(5) null
 );
 
 create table products
@@ -27,15 +18,25 @@ create table products
         primary key,
     name varchar(25) null,
     info varchar(150) null,
-    language varchar(5) null,
     price decimal(10,2) null,
-    currency varchar(5) null,
     date timestamp default CURRENT_TIMESTAMP null,
-    date_of_modification timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
-    constraint products_ibfk_1
-        foreign key (language) references info_language (language),
-    constraint products_ibfk_2
-        foreign key (currency) references currency (value)
+    date_of_modification timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP
+);
+
+create table product_currencies
+(
+    product_id int not null,
+    currency_id int not null,
+        foreign key (product_id) references products (id),
+        foreign key (currency_id) references currency (id)
+);
+
+create table product_language
+(
+    product_id int not null,
+    language_id int not null,
+        foreign key (product_id) references products (id),
+        foreign key (language_id) references info_language (id)
 );
 
 

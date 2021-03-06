@@ -1,10 +1,8 @@
 package ru.depi.testapplication.demo.dto;
 
-import ru.depi.testapplication.demo.entity.Currency;
-import ru.depi.testapplication.demo.entity.Info_language;
-
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author DePi
@@ -17,8 +15,8 @@ public class ProductDTO {
     private double price;
     private Date date;
     private Date date_of_modification;
-    private List<String> currencies;
-    private List<String> languages;
+    private Set<String> currencies;
+    private Set<String> languages;
 
     public int getId() {
         return id;
@@ -68,19 +66,19 @@ public class ProductDTO {
         this.date_of_modification = date_of_modification;
     }
 
-    public List<String> getCurrencies() {
+    public Set<String> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<String> currencies) {
+    public void setCurrencies(Set<String> currencies) {
         this.currencies = currencies;
     }
 
-    public List<String> getLanguages() {
+    public Set<String> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<String> languages) {
+    public void setLanguages(Set<String> languages) {
         this.languages = languages;
     }
 }

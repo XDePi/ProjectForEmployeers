@@ -1,6 +1,5 @@
 package ru.depi.testapplication.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.depi.testapplication.demo.dto.ProductDTO;
@@ -12,9 +11,7 @@ import ru.depi.testapplication.demo.repository.Info_languageRepository;
 import ru.depi.testapplication.demo.repository.ProductRepository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -76,27 +73,31 @@ public class ProductServiceImpl implements ProductService {
 
     private void mapDTOToEntity(ProductDTO productDTO, Product product) {
         product.setName(productDTO.getName());
+        product.setDate(productDTO.getDate());
+        product.setDate_of_modification(productDTO.getDate_of_modification());
+        product.setInfo(productDTO.getInfo());
+        product.setPrice(productDTO.getPrice());
         if (null == product.getCurrencies()) {
-            product.setCurrencies(new ArrayList<>());
+            product.setCurrencies(new HashSet<>());
         }
         productDTO.getCurrencies().stream().forEach(currencyName -> {
             Currency currency = currencyRepository.findByValue(currencyName);
             if (null == currency) {
                 currency = new Currency();
-                currency.setProducts(new ArrayList<>());
+                currency.setProducts(new HashSet<>());
             }
             currency.setValue(currencyName);
             product.addCurrencyToProduct(currency);
         });
 
         if (null == product.getLanguages()) {
-            product.setLanguages(new ArrayList<>());
+            product.setLanguages(new HashSet<>());
         }
         productDTO.getLanguages().stream().forEach(languageName -> {
             Info_language language = info_languageRepository.findByLanguage(languageName);
             if (null == language) {
                 language = new Info_language();
-                language.setProducts(new ArrayList<>());
+                language.setProducts(new HashSet<>());
             }
             language.setLanguage(languageName);
             product.addLanguageToProduct(language);
@@ -107,8 +108,12 @@ public class ProductServiceImpl implements ProductService {
         ProductDTO responseDto = new ProductDTO();
         responseDto.setName(product.getName());
         responseDto.setId(product.getId());
-        responseDto.setCurrencies(product.getCurrencies().stream().map(Currency::getValue).collect(Collectors.toList()));
-        responseDto.setLanguages(product.getLanguages().stream().map(Info_language::getLanguage).collect(Collectors.toList()));
+        responseDto.setDate(product.getDate());
+        responseDto.setDate_of_modification(product.getDate_of_modification());
+        responseDto.setInfo(product.getInfo());
+        responseDto.setPrice(product.getPrice());
+        responseDto.setCurrencies(product.getCurrencies().stream().map(Currency::getValue).collect(Collectors.toSet()));
+        responseDto.setLanguages(product.getLanguages().stream().map(Info_language::getLanguage).collect(Collectors.toSet()));
         return responseDto;
     }
 }
