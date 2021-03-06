@@ -1,8 +1,12 @@
 package ru.depi.testapplication.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author DePi
@@ -20,19 +24,11 @@ public class Info_language {
     @Column
     private String language;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "product_language",
-            joinColumns = @JoinColumn(name = "languageId"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
-    )
-    private List<Product> products;
-
-    public void addProductsToLanguage(Product product) {
-        if (products == null)
-            products = new ArrayList<>();
-        products.add(product);
-    }
+    @ManyToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY,
+                mappedBy = "languages")
+    @JsonIgnoreProperties("languages")
+    private Set<Product> products = new HashSet<>();
 
     public Info_language() {
     }
@@ -57,11 +53,11 @@ public class Info_language {
         this.id = id;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 

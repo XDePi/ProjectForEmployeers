@@ -1,14 +1,13 @@
 package ru.depi.testapplication.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author DePi
@@ -31,7 +30,7 @@ public class Product {
     private String info;
 
     @Column
-//    @Min(value = 1, message = "Price must be not less than 1")
+    @Min(value = 1, message = "Price must be not less than 1")
     private double price;
 
     @Column(updatable = false)
@@ -42,53 +41,25 @@ public class Product {
     @UpdateTimestamp
     private Date date_of_modification;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_currencies",
-            joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "currencyId")
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "currency_id")
     )
-    private List<Currency> currencies;
+    @JsonIgnoreProperties("products")
+    private Set<Currency> currencies;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_language",
-            joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "languageId")
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id")
     )
-    private List<Info_language> languages;
-
-    public void addCurrencyToProduct(Currency currency) {
-        this.currencies.add(currency);
-        currency.getProducts().add(this);
-    }
-
-    public void addLanguageToProduct(Info_language language) {
-        this.languages.add(language);
-        language.getProducts().add(this);
-    }
-
-    public void removeCurrency(Currency currency) {
-        this.getCurrencies().remove(currency);
-        currency.getProducts().remove(this);
-    }
-
-    public void removeLanguage(Info_language language) {
-        this.getLanguages().remove(language);
-        language.getProducts().remove(this);
-    }
-
-    public void removeCurrencies() {
-        for (Currency currency : new ArrayList<>(currencies)) {
-            removeCurrency(currency);
-        }
-    }
-
-    public void removeLanguages() {
-        for (Info_language language : new ArrayList<>(languages)) {
-            removeLanguage(language);
-        }
-    }
+    @JsonIgnoreProperties("products")
+    private Set<Info_language> languages = new HashSet<>();
 
     public Product() {
     }
@@ -114,19 +85,19 @@ public class Product {
                 '}';
     }
 
-    public List<Info_language> getLanguages() {
+    public Set<Info_language> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<Info_language> languages) {
+    public void setLanguages(Set<Info_language> languages) {
         this.languages = languages;
     }
 
-    public List<Currency> getCurrencies() {
+    public Set<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Currency> currencies) {
+    public void setCurrencies(Set<Currency> currencies) {
         this.currencies = currencies;
     }
 

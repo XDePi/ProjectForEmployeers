@@ -1,14 +1,14 @@
 package ru.depi.testapplication.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.depi.testapplication.demo.dto.ProductDTO;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.depi.testapplication.demo.entity.Product;
 import ru.depi.testapplication.demo.repository.ProductRepository;
-import ru.depi.testapplication.demo.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,30 +19,18 @@ import java.util.List;
 public class MyController {
 
     @Autowired
-    private ProductService productService;
-
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts();
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
+    ProductRepository productRepository;
 
     @PostMapping("/products")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO prd = productService.addProduct(productDTO);
-        return new ResponseEntity<>(prd, HttpStatus.CREATED);
+    public Product addNewProduct(@RequestBody Product product) {
+        return productRepository.save(product);
     }
 
-    @PutMapping("/products/{id}")
-    public ResponseEntity<ProductDTO> updateStudent(@PathVariable(name = "id") int id,
-                                                    @RequestBody ProductDTO productDTO) {
-        ProductDTO prd = productService.updateProduct(id, productDTO);
-        return new ResponseEntity<>(prd, HttpStatus.CREATED);
+    @GetMapping("/products")
+    public List<Product> getProducts() {
+        List<Product> products = new ArrayList<>();
+        productRepository.findAll().iterator().forEachRemaining(products::add);
+        return products;
     }
 
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable(name = "id") int id) {
-        String message = productService.deleteProduct(id);
-        return new ResponseEntity<>(message, HttpStatus.OK);
-    }
 }

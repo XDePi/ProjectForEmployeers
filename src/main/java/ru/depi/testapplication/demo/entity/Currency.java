@@ -1,8 +1,12 @@
 package ru.depi.testapplication.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author DePi
@@ -20,19 +24,11 @@ public class Currency {
     @Column
     private String value;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "product_currencies",
-            joinColumns = @JoinColumn(name = "currencyId"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
-    )
-    private List<Product> products;
-
-    public void addProductsToCurrency(Product product) {
-        if (products == null)
-            products = new ArrayList<>();
-        products.add(product);
-    }
+    @ManyToMany(cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY,
+                mappedBy = "currencies")
+    @JsonIgnoreProperties("currencies")
+    private Set<Product> products = new HashSet<>();
 
     public Currency() {
     }
@@ -57,11 +53,11 @@ public class Currency {
         this.id = id;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
