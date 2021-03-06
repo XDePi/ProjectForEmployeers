@@ -6,9 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author DePi
@@ -45,18 +43,18 @@ public class Product {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_currencies",
-            joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "currencyId")
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "currency_id")
     )
-    private List<Currency> currencies;
+    private Set<Currency> currencies;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_language",
-            joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "languageId")
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id")
     )
-    private List<Info_language> languages;
+    private Set<Info_language> languages;
 
     public void addCurrencyToProduct(Currency currency) {
         this.currencies.add(currency);
@@ -79,13 +77,13 @@ public class Product {
     }
 
     public void removeCurrencies() {
-        for (Currency currency : new ArrayList<>(currencies)) {
+        for (Currency currency : new HashSet<>(currencies)) {
             removeCurrency(currency);
         }
     }
 
     public void removeLanguages() {
-        for (Info_language language : new ArrayList<>(languages)) {
+        for (Info_language language : new HashSet<>(languages)) {
             removeLanguage(language);
         }
     }
@@ -114,19 +112,19 @@ public class Product {
                 '}';
     }
 
-    public List<Info_language> getLanguages() {
+    public Set<Info_language> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<Info_language> languages) {
+    public void setLanguages(Set<Info_language> languages) {
         this.languages = languages;
     }
 
-    public List<Currency> getCurrencies() {
+    public Set<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Currency> currencies) {
+    public void setCurrencies(Set<Currency> currencies) {
         this.currencies = currencies;
     }
 

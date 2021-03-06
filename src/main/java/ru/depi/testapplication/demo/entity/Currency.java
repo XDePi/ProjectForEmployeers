@@ -2,7 +2,9 @@ package ru.depi.testapplication.demo.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author DePi
@@ -23,14 +25,14 @@ public class Currency {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_currencies",
-            joinColumns = @JoinColumn(name = "currencyId"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
+            joinColumns = @JoinColumn(name = "currency_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products;
+    private Set<Product> products;
 
     public void addProductsToCurrency(Product product) {
         if (products == null)
-            products = new ArrayList<>();
+            products = new HashSet<>();
         products.add(product);
     }
 
@@ -57,11 +59,11 @@ public class Currency {
         this.id = id;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
