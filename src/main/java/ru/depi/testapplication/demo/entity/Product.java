@@ -29,7 +29,7 @@ public class Product {
     private String info;
 
     @Column
-//    @Min(value = 1, message = "Price must be not less than 1")
+    @Min(value = 1, message = "Price must be not less than 1")
     private double price;
 
     @Column(updatable = false)

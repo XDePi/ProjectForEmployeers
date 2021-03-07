@@ -49,6 +49,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDTO> findAllByInfo(String info) {
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        List<Product> products = productRepository.findAllByInfo(info);
+        products.stream().forEach(product -> {
+            ProductDTO productDTO = mapEntityToDTO(product);
+            productDTOS.add(productDTO);
+        });
+        return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> findAllByName(String name) {
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        List<Product> products = productRepository.findAllByName(name);
+        products.stream().forEach(product -> {
+            ProductDTO productDTO = mapEntityToDTO(product);
+            productDTOS.add(productDTO);
+        });
+        return productDTOS;
+    }
+
+    @Override
     @Transactional
     public ProductDTO updateProduct(int id, ProductDTO productDTO) {
         Product product = productRepository.getOne(id);

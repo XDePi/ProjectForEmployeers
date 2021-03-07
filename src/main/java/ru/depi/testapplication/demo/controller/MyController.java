@@ -27,6 +27,18 @@ public class MyController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/products/info/{info}")
+    public ResponseEntity<List<ProductDTO>> findAllByInfo(@PathVariable String info) {
+        List<ProductDTO> products = productService.findAllByInfo(info);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/products/name/{name}")
+    public ResponseEntity<List<ProductDTO>> findAllByName(@PathVariable String name) {
+        List<ProductDTO> products = productService.findAllByName(name);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @PostMapping("/products")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO prd = productService.addProduct(productDTO);
