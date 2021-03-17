@@ -88,13 +88,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String deleteProduct(int id) {
+    public Boolean deleteProduct(int id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
             product.get().removeCurrencies();
             product.get().removeLanguages();
             productRepository.deleteById(product.get().getId());
-            return "Product with id: " + id + " deleted successfully";
+            return true;
         } else throw new NoSuchProductException();
     }
 

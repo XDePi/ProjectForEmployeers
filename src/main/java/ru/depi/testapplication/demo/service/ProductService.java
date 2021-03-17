@@ -14,7 +14,7 @@ public interface ProductService {
 
     public ProductDTO updateProduct(int id, ProductDTO productDTO);
 
-    public String deleteProduct(int id);
+    public Boolean deleteProduct(int id);
 
     List<ProductDTO> findAllByInfo(String info);
 
