@@ -6,6 +6,7 @@ import ru.depi.testapplication.demo.dto.ProductDTO;
 import ru.depi.testapplication.demo.entity.Currency;
 import ru.depi.testapplication.demo.entity.Info_language;
 import ru.depi.testapplication.demo.entity.Product;
+import ru.depi.testapplication.demo.exceptions.NoSuchProductException;
 import ru.depi.testapplication.demo.repository.CurrencyRepository;
 import ru.depi.testapplication.demo.repository.Info_languageRepository;
 import ru.depi.testapplication.demo.repository.ProductRepository;
@@ -73,12 +74,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDTO updateProduct(int id, ProductDTO productDTO) {
-        Product product = productRepository.getOne(id);
-        product.getCurrencies().clear();
-        product.getLanguages().clear();
-        mapDTOToEntity(productDTO, product);
-        Product prd = productRepository.save(product);
-        return mapEntityToDTO(prd);
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            Product p = productRepository.getOne(id);
+            p.getCurrencies().clear();
+            p.getLanguages().clear();
+            mapDTOToEntity(productDTO, p);
+            Product prd = productRepository.save(p);
+            return mapEntityToDTO(prd);
+        } else
+            throw new NoSuchProductException();
+
     }
 
     @Override
@@ -89,8 +95,7 @@ public class ProductServiceImpl implements ProductService {
             product.get().removeLanguages();
             productRepository.deleteById(product.get().getId());
             return "Product with id: " + id + " deleted successfully";
-        }
-        return null;
+        } else throw new NoSuchProductException();
     }
 
     private void mapDTOToEntity(ProductDTO productDTO, Product product) {

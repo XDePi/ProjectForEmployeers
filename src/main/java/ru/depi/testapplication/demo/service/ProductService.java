@@ -19,5 +19,4 @@ public interface ProductService {
     List<ProductDTO> findAllByInfo(String info);
 
     List<ProductDTO> findAllByName(String name);
-
 }
