@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ public class Product {
     private String info;
 
     @Column
-    @Min(value = 1, message = "Price must be not less than 1")
+    @Positive(message = "Price must be greater than 0")
     private double price;
 
     @Column(updatable = false)
