@@ -33,11 +33,12 @@ public class Product {
     @Positive(message = "Price must be greater than 0")
     private double price;
 
-    @Column(updatable = false)
+    @Column(updatable = false,
+            insertable = false)
     @CreationTimestamp
     private Date date;
 
-    @Column
+    @Column(insertable = false)
     @UpdateTimestamp
     private Date date_of_modification;
 
