@@ -3,11 +3,11 @@ This project was made for employeers that want to see my skills in making simple
 It creates a simple SpringBoot application that works with built-in MySQL database and JSON formatted views.
 Here you can create your product with it's description and price. Every single product will have a creation date and update time. You can also change currency and language of description. 
 
-**How to make everything work**
+# How to make everything work
 1. You must connect to your empty MySQL database via `application.properties`
 2. Then in `database.sql` you need to copy the script and execute it in the database 
 
-**Working with JSON**
+# Working with JSON
 1. In your browser connect to http://***your_db_server***/products. Here you can see the list of all products
 2. http://***your_db_server***/products/info/***keywords***. Here you can search any product by its info.
 3. http://***your_db_server***/products/name/***keywords***. Here you can search any product by its name.
